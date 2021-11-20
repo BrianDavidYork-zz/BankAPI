@@ -1,4 +1,4 @@
-import { ITransfer } from './helpers/dataTypings'
+import { ITransfer } from './db/dataTypings'
 
 export interface IViewTransfersResult {
     data: Array<ITransfer> | null
@@ -15,9 +15,21 @@ export interface ICreateAccountResult {
     error: Error | null
 }
 
-export interface ITransferMoneyResult {
+export interface ICreateTransferResult {
     data: boolean | null
     error: Error | null
+}
+
+export interface INewTransferData {
+    accountIdTo: string
+    accountIdFrom: string
+    amountIdTransferred: string
+}
+
+export interface IConvertedNewTransferData {
+    accountIdTo: number
+    accountIdFrom: number
+    amountTransferred: number
 }
 
 export interface IIdFreeTransfer {
