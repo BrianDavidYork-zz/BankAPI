@@ -20,6 +20,12 @@ export interface ITransferMoneyResult {
     error: Error | null
 }
 
+export interface IIdFreeTransfer {
+    accountIdFrom: number
+    accountIdTo: number
+    amountTransferred: number
+}
+
 export interface INewAccountData {
     ownerId: string
     balance: string

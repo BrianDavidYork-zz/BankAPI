@@ -3,11 +3,6 @@ import { IAccount, ITransfer } from './dataTypings'
 import * as data from'./fakeDB.json'
 const fs = require('fs')
 
-// Api standrdized Response
-    // Message
-    // status
-    // Data
-
 // validate Number
 
 // fake DB calls
