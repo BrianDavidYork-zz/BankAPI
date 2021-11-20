@@ -1,29 +1,64 @@
-import { IAccount, ITransfer } from './data'
+import { IConvertedNewAccountData, ICreateAccountResult, INewAccountData, IViewBalanceResult, IViewTransfersResult } from '../controllerTypings'
+import { IAccount, ITransfer } from './dataTypings'
 import * as data from'./fakeDB.json'
+const fs = require('fs')
 
-// Api standrdized error
+// Api standrdized Response
     // Message
+    // status
     // Data
 
+// validate Number
 
 // fake DB calls
-    // createAccount
+export function createNewAccount (accountObject: IConvertedNewAccountData): ICreateAccountResult {
+    let responseData = null
+    let responseErr = null
 
-export function getBalanceByAccountId (accountId: Number) {
+    // add id
+    const newAccount: IAccount = {
+        id: data.accounts.length + 1,
+        ...accountObject
+    }
+
+    console.log(newAccount)
+
+    data.accounts.push(newAccount)
+
+    try{
+        saveToDisk()
+    } catch (err: any) {
+        responseErr = new Error('Account Could Not Be Created In The Database!')
+    }
+
+    responseData = true
+
+    return { data: responseData, error: responseErr}
+}
+
+export function getBalanceByAccountId (accountId: Number): IViewBalanceResult {
+    let responseData = null
+    let responseErr = null
+
     const accounts: Array<IAccount> = data.accounts
 
     const result: IAccount | undefined = accounts.find((acc: IAccount) => {return acc.id === accountId})
 
     if (result === undefined) {
-        throw new Error('No Account With That ID Exists!')
+        responseErr = new Error('No Account With That ID Exists!')
     } else {
-        return result.balance
+        responseData = result.balance
     }
+
+    return { data: responseData, error: responseErr}
 }
     
     // transferMoney
 
-export function getTransfersByAccountId (accountId: Number) {
+export function getTransfersByAccountId (accountId: Number): IViewTransfersResult {
+    let responseData = null
+    let responseErr = null
+
     const transfers: Array<ITransfer> = data.transfers
 
     const result: Array<ITransfer> | undefined = transfers.filter((transfer: ITransfer) => {
@@ -31,10 +66,14 @@ export function getTransfersByAccountId (accountId: Number) {
     })
 
     if (result === undefined) {
-        throw new Error('No Account With That ID Exists!')
+        responseErr = new Error('No Account With That ID Exists!')
     } else {
-        return result
+        responseData = result
     }
+
+    return { data: responseData, error: responseErr}
 }
 
-// validate Number
+const saveToDisk = () => {
+    fs.writeFileSync('./src/helpers/fakeDB.json', JSON.stringify(data), 'utf-8')
+  }

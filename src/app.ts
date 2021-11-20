@@ -12,7 +12,7 @@ app.use(bp.json());
 app.use(bp.urlencoded({ extended: true }))
 
 // ROUTES
-// app.post('/api/account', controller.createAccount)
+app.post('/api/account', controller.createAccount)
 app.get('/api/account/:acctId', controller.viewBalance)
 // app.put('/api/transfer/:acctIdFrom/:acctIdTo', controller.transferMoney)
 app.get('/api/transfer/:acctId', controller.viewTransfers)
