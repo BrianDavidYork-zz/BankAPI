@@ -1,4 +1,4 @@
-import { IAccount } from './data'
+import { IAccount, ITransfer } from './data'
 import * as data from'./fakeDB.json'
 
 // Api standrdized error
@@ -22,6 +22,19 @@ export function getBalanceByAccountId (accountId: Number) {
 }
     
     // transferMoney
-    // getAllTransfersByAccount
+
+export function getTransfersByAccountId (accountId: Number) {
+    const transfers: Array<ITransfer> = data.transfers
+
+    const result: Array<ITransfer> | undefined = transfers.filter((transfer: ITransfer) => {
+        return transfer.accountIdFrom === accountId || transfer.accountIdTo === accountId
+    })
+
+    if (result === undefined) {
+        throw new Error('No Account With That ID Exists!')
+    } else {
+        return result
+    }
+}
 
 // validate Number
