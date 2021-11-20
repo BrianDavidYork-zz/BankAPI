@@ -35,8 +35,6 @@ export function createNewTransfer (transferObject: IConvertedNewTransferData): I
     let responseData = null
     let responseErr = null
 
-    console.log(accounts)
-
     // add money to TO
     accounts.forEach((acct: IAccount) => {
         if (acct.id === transferObject.accountIdTo) {
