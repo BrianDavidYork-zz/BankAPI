@@ -8,7 +8,7 @@ import {
 } from '../controllerTypings'
 import { IAccount, IPerson, ITransfer } from './dataTypings'
 import { saveToDisk } from '../helpers/utils'
-import * as persons from '../db/persons.json'
+const persons = require('./persons.json')
 const accounts = require('./accounts.json')
 const transfers = require('./transfers.json')
 
@@ -38,7 +38,7 @@ export function createNewAccount (accountObject: IConvertedNewAccountData): ICre
         responseErr = new Error('Account Could Not Be Created In The Database!')
     }
 
-    responseData = true
+    responseData = newAccount.id
 
     return { data: responseData, error: responseErr}
 }

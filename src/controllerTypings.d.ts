@@ -11,7 +11,7 @@ export interface IViewBalanceResult {
 }
 
 export interface ICreateAccountResult {
-    data: boolean | null
+    data: number | null
     error: Error | null
 }
 

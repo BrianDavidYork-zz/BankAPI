@@ -1,6 +1,7 @@
 import express from 'express'
 import { 
     ICreateAccountResult, 
+    ICreateTransferResult, 
     IIdFreeTransfer, 
     INewAccountData, 
     IViewBalanceResult, 
@@ -43,11 +44,9 @@ export function createAccount (req: express.Request, res: express.Response) {
     }
 
     const {data, error}: ICreateAccountResult = createNewAccount(convertedAccountDetails)
-
-    // NEED TO RETURN ACCOUNT NUMBER
     
     if (data) {
-        return res.send({success: true, data: null, message: 'Account Successfully Created'}).status(200)
+        return res.send({success: true, data: `Account number: ${data}`, message: 'Account Successfully Created'}).status(200)
     } else if (error) {
         return res.send({success: false, data: null, message: error.message})
     }
@@ -57,6 +56,10 @@ export function transferMoney (req: express.Request, res: express.Response) {
     const accountTo: string = req.params.acctIdTo
     const accountFrom: string = req.params.acctIdFrom
     const amountTransferred: string = req.params.amount
+
+    if (accountTo === accountFrom) {
+        return res.send({success: false, data: null, message: 'Please Provide Two Different AccountIDs!'}).status(400)
+    }
 
     const acctToExists: boolean = accountExists(parseInt(accountTo))
     const acctFromExists: boolean = accountExists(parseInt(accountFrom))
@@ -84,7 +87,7 @@ export function transferMoney (req: express.Request, res: express.Response) {
         amountTransferred: parseInt(amountTransferred)
     }
 
-    const {data, error}: ICreateAccountResult = createNewTransfer(convertedTransferDetails)
+    const {data, error}: ICreateTransferResult = createNewTransfer(convertedTransferDetails)
     
     if (data) {
         return res.send({success: true, data: null, message: 'Money Successfully Transferred'}).status(200)

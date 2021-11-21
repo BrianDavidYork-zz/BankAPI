@@ -1,7 +1,7 @@
 const fs = require('fs')
 
 export function isAPositiveWholeNumber(numString: string) {
-    const regex = /^[1-9]*[0-9]$/
+    const regex = /^[1-9][0-9]*$/
     return numString.match(regex)
 }
 
