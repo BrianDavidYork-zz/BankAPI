@@ -1,24 +1,50 @@
 import express from 'express'
-import { ICreateAccountResult, IIdFreeTransfer, INewAccountData, IViewBalanceResult, IViewTransfersResult } from './controllerTypings'
+import { 
+    ICreateAccountResult, 
+    IIdFreeTransfer, 
+    INewAccountData, 
+    IViewBalanceResult, 
+    IViewTransfersResult 
+} from './controllerTypings'
 import { ITransfer } from './db/dataTypings'
-import { createNewAccount, createNewTransfer, getBalanceByAccountId, getTransfersByAccountId } from './helpers/utils'
+import { isAPositiveWholeNumber } from './helpers/utils'
+import {
+    accountExists, 
+    createNewAccount, 
+    createNewTransfer, 
+    getBalanceByAccountId, 
+    getTransfersByAccountId, 
+    personExists
+} from './db/dbMethods'
 
 export function createAccount (req: express.Request, res: express.Response) {
     const accountDetails: INewAccountData = req.body
 
-    // check for ownerId in body
-    // check for balance in body
-    // check that owner exists
-    // check that balance is a positive whole number
+    if (
+        accountDetails.balance == undefined ||
+        accountDetails.ownerId == undefined
+    ) {
+        return res.send({success: false, data: null, message: 'Please Provide An OwnerID And A Starting Account Balance!'}).status(400)
+    }
 
-    // convert both to number
-    const newAccountDetails = {
+    const accountOwnerExists: boolean = personExists(parseInt(accountDetails.ownerId))
+
+    if (!accountOwnerExists) {
+        return res.send({success: false, data: null, message: 'Please Provide A Valid OwnerID!'}).status(400)
+    }
+
+    if (!isAPositiveWholeNumber(accountDetails.balance)) {
+        return res.send({success: false, data: null, message: 'Please Provide A Valid Account Balance!'}).status(400)
+    }
+
+    const convertedAccountDetails = {
         ownerId: parseInt(accountDetails.ownerId),
         balance: parseInt(accountDetails.balance)
     }
 
-    // call DB
-    const {data, error}: ICreateAccountResult = createNewAccount(newAccountDetails)
+    const {data, error}: ICreateAccountResult = createNewAccount(convertedAccountDetails)
+
+    // NEED TO RETURN ACCOUNT NUMBER
     
     if (data) {
         return res.send({success: true, data: null, message: 'Account Successfully Created'}).status(200)
@@ -32,23 +58,33 @@ export function transferMoney (req: express.Request, res: express.Response) {
     const accountFrom: string = req.params.acctIdFrom
     const amountTransferred: string = req.params.amount
 
-    // check for all params
+    const acctToExists: boolean = accountExists(parseInt(accountTo))
+    const acctFromExists: boolean = accountExists(parseInt(accountFrom))
 
-    // check that both accounts exists
+    if (!(acctToExists && acctFromExists)) {
+        return res.send({success: false, data: null, message: 'Please Provide Valid AccountIDs!'}).status(400)
+    }
 
-    // check that balance is a positive whole number
+
+    if (!isAPositiveWholeNumber(amountTransferred)) {
+        return res.send({success: false, data: null, message: 'Please Provide A Valid Transfer Amount!'}).status(400)
+    }
 
     // chack that accountFrom has enough money for transaction
+    const acctFromBalance = getBalanceByAccountId(parseInt(accountFrom))
+
+    if (acctFromBalance.data && (acctFromBalance.data < parseInt(amountTransferred))) {
+        return res.send({success: false, data: null, message: 'Not Enough Money To Transfer!'}).status(400)
+    }
 
     // convert all params to number
-    const newTransferDetails = {
+    const convertedTransferDetails = {
         accountIdTo: parseInt(accountTo),
         accountIdFrom: parseInt(accountFrom),
         amountTransferred: parseInt(amountTransferred)
     }
 
-    // call DB
-    const {data, error}: ICreateAccountResult = createNewTransfer(newTransferDetails)
+    const {data, error}: ICreateAccountResult = createNewTransfer(convertedTransferDetails)
     
     if (data) {
         return res.send({success: true, data: null, message: 'Money Successfully Transferred'}).status(200)
@@ -60,10 +96,12 @@ export function transferMoney (req: express.Request, res: express.Response) {
 export function viewTransfers (req: express.Request, res: express.Response) {
     const accountId: string = req.params.acctId
 
-    // check that account is a positive whole number
-    // check that account exists
+    const acctExists: boolean = accountExists(parseInt(accountId))
 
-    // call DB
+    if (!acctExists) {
+        return res.send({success: false, data: null, message: 'Please Provide A Valid AccountID!'}).status(400)
+    }
+
     const {data, error}: IViewTransfersResult = getTransfersByAccountId(parseInt(accountId))
 
     if (data) {
@@ -86,10 +124,12 @@ export function viewTransfers (req: express.Request, res: express.Response) {
 export function viewBalance (req: express.Request, res: express.Response) {
     const accountId: string = req.params.acctId
 
-    // check that accountId is a positive whole number
-    // check that account exists
+    const acctExists: boolean = accountExists(parseInt(accountId))
 
-    // call DB
+    if (!acctExists) {
+        return res.send({success: false, data: null, message: 'Please Provide A Valid AccountID!'}).status(400)
+    }
+
     const {data, error}: IViewBalanceResult = getBalanceByAccountId(parseInt(accountId))
 
     if (data) {
