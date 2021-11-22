@@ -18,6 +18,10 @@ import {
     personExists
 } from './db/dbMethods'
 
+export function home (req: express.Request, res: express.Response) {
+    return res.send(`Welcome to Brian's Bank API`)
+  }
+
 export function createAccount (req: express.Request, res: express.Response) {
     const accountDetails: INewAccountData = req.body
 
