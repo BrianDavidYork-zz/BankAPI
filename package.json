@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node dist/app.js",
     "test": "jest --runInBand",
-    "postinstall": "tsc"
+    "build": "tsc",
+    "postinstall": "npm run build"
   },
   "repository": {
     "type": "git",
