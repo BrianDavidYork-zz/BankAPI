@@ -2,7 +2,7 @@ const express = require( "express" )
 const app = express()
 const bp = require('body-parser')
 const controller = require('./controller')
-const port = 8080
+const port = process.env.PORT || 8080
 
 app.listen(port, () => {
   console.log('Server running on port ' + port)
