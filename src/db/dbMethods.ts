@@ -8,9 +8,9 @@ import {
 } from '../controllerTypings'
 import { IAccount, IPerson, ITransfer } from './dataTypings'
 import { saveToDisk } from '../helpers/utils'
-const persons = require('./persons.json')
-const accounts = require('./accounts.json')
-const transfers = require('./transfers.json')
+const persons = require('./persons')
+const accounts = require('./accounts')
+const transfers = require('./transfers')
 
 export function personExists (personId: number): boolean {
     return persons.find((person: IPerson) => person.id === personId) ? true : false
