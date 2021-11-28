@@ -6,5 +6,5 @@ export function isAPositiveWholeNumber(numString: string) {
 }
 
 export const saveToDisk = (db: string, data: any) => {
-    fs.writeFileSync(`./src/db/${db}.js`, JSON.stringify(data), 'utf-8')
+    fs.writeFileSync(`./src/db/${db}.js`, `module.exports = ${JSON.stringify(data)}`, 'utf-8')
   }
