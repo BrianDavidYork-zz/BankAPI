@@ -13,6 +13,7 @@ This Api has 4 endpoints:
       balance: (a whole, positive number)
       ownerId: (the id of the person associated with the account
     The owner id must belong to an existing person (1, 2, 3, or 4)
+    All values in the post body must be strings
     
   
   (3) GET   api/transfer/<account id>
