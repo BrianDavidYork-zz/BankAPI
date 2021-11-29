@@ -2,7 +2,7 @@ BRIAN'S BANK API
 
 This Api has 4 endpoints:
 
-  (1) GET   api/account/<account id>
+  (1) GET   api/account/{account id}
     This takes in an account id and returns the current balance of the account
     Account id must belong to an existing account
   
@@ -16,12 +16,12 @@ This Api has 4 endpoints:
     All values in the post body must be strings
     
   
-  (3) GET   api/transfer/<account id>
+  (3) GET   api/transfer/{account id}
     This takes in an account id and returns all transfers associated with the account
     Account id must belong to an existing account
     
     
-  (4) PUT   api/transfer/<id of account paying>/<id of account being payed>/<amount>
+  (4) PUT   api/transfer/{id of account paying}/{id of account being payed}/{amount}
     This takes in two account ids and an quantitiy of the money being transferred
     Both account ids must belong to existing accounts
     You cannot transfer money to and from the same account
